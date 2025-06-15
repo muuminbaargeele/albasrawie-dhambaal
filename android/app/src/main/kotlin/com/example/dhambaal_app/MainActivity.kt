@@ -1,4 +1,4 @@
-package com.example.dhambaal_app
+package com.albasrawie.dhambaal
 
 import io.flutter.embedding.android.FlutterActivity
 
