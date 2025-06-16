@@ -1,3 +1,4 @@
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -11,7 +12,17 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
   Get.put(StorageService());
-  runApp(const MainApp());
+  runApp(
+    LayoutBuilder(builder: (context, constraints) {
+      final isTablet = constraints.maxWidth > 600;
+      return ScreenUtilInit(
+        designSize: isTablet ? Size(constraints.maxWidth, constraints.maxHeight) : Size(412, 917),
+        minTextAdapt: true,
+        splitScreenMode: true,
+        builder: (context, child) => MainApp(),
+      );
+    }),
+  );
 }
 
 class MainApp extends StatelessWidget {

@@ -1,10 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'app_light_colors.dart';
 import 'app_dark_colors.dart';
 import 'app_shared_colors.dart';
 
 class AppTheme {
+  static TextTheme textTheme(Color textColor) {
+    return TextTheme(
+      displayLarge: GoogleFonts.inter(
+        fontSize: 32.sp,
+        fontWeight: FontWeight.bold,
+        height: 1.2.h,
+        color: textColor,
+      ),
+      displayMedium: GoogleFonts.inter(
+        fontSize: 24.sp,
+        fontWeight: FontWeight.bold,
+        height: 1.2.h,
+        color: textColor,
+      ),
+      displaySmall: GoogleFonts.inter(
+        fontSize: 18.sp,
+        fontWeight: FontWeight.w600,
+        height: 1.2.h,
+        color: textColor,
+      ),
+      bodyLarge: GoogleFonts.inter(
+        fontSize: 16.sp,
+        fontWeight: FontWeight.normal,
+        height: 1.4.h,
+        color: textColor,
+      ),
+      labelLarge: GoogleFonts.inter(
+        fontSize: 16.sp,
+        fontWeight: FontWeight.w600,
+        height: 1.2.h,
+        color: textColor,
+      ),
+      bodySmall: GoogleFonts.inter(
+        fontSize: 12.sp,
+        fontWeight: FontWeight.normal,
+        height: 1.4.h,
+        color: AppSharedColors.mutedText,
+      ),
+    );
+  }
+
   static ThemeData light = ThemeData(
     brightness: Brightness.light,
     scaffoldBackgroundColor: AppLightColors.background,
@@ -14,44 +56,7 @@ class AppTheme {
       secondary: AppLightColors.accent,
       error: AppSharedColors.error,
     ),
-    textTheme: TextTheme(
-      displayLarge: GoogleFonts.inter(
-        fontSize: 32,
-        fontWeight: FontWeight.bold,
-        height: 1.2,
-        color: AppLightColors.mainText,
-      ),
-      displayMedium: GoogleFonts.inter(
-        fontSize: 24,
-        fontWeight: FontWeight.bold,
-        height: 1.2,
-        color: AppLightColors.mainText,
-      ),
-      displaySmall: GoogleFonts.inter(
-        fontSize: 18,
-        fontWeight: FontWeight.w600,
-        height: 1.2,
-        color: AppLightColors.mainText,
-      ),
-      bodyLarge: GoogleFonts.inter(
-        fontSize: 16,
-        fontWeight: FontWeight.normal,
-        height: 1.4,
-        color: AppLightColors.mainText,
-      ),
-      labelLarge: GoogleFonts.inter(
-        fontSize: 16,
-        fontWeight: FontWeight.w600,
-        height: 1.2,
-        color: AppLightColors.mainText,
-      ),
-      bodySmall: GoogleFonts.inter(
-        fontSize: 12,
-        fontWeight: FontWeight.normal,
-        height: 1.4,
-        color: AppSharedColors.mutedText,
-      ),
-    ),
+    textTheme: textTheme(AppLightColors.mainText),
   );
 
   static ThemeData dark = ThemeData(
@@ -63,43 +68,6 @@ class AppTheme {
       secondary: AppDarkColors.accent,
       error: AppSharedColors.error,
     ),
-    textTheme: TextTheme(
-      displayLarge: GoogleFonts.inter(
-        fontSize: 32,
-        fontWeight: FontWeight.bold,
-        height: 1.2,
-        color: AppDarkColors.mainText,
-      ),
-      displayMedium: GoogleFonts.inter(
-        fontSize: 24,
-        fontWeight: FontWeight.bold,
-        height: 1.2,
-        color: AppDarkColors.mainText,
-      ),
-      displaySmall: GoogleFonts.inter(
-        fontSize: 18,
-        fontWeight: FontWeight.w600,
-        height: 1.2,
-        color: AppDarkColors.mainText,
-      ),
-      bodyLarge: GoogleFonts.inter(
-        fontSize: 16,
-        fontWeight: FontWeight.normal,
-        height: 1.4,
-        color: AppDarkColors.mainText,
-      ),
-      labelLarge: GoogleFonts.inter(
-        fontSize: 16,
-        fontWeight: FontWeight.w600,
-        height: 1.2,
-        color: AppDarkColors.mainText,
-      ),
-      bodySmall: GoogleFonts.inter(
-        fontSize: 12,
-        fontWeight: FontWeight.normal,
-        height: 1.4,
-        color: AppSharedColors.mutedText,
-      ),
-    ),
+    textTheme: textTheme(AppDarkColors.mainText),
   );
 }
