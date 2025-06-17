@@ -6,7 +6,7 @@ import 'app_dark_colors.dart';
 import 'app_shared_colors.dart';
 
 class AppTheme {
-  static TextTheme textTheme(Color textColor) {
+  static TextTheme textTheme(Color textColor, Color buttonTextColor) {
     return TextTheme(
       displayLarge: GoogleFonts.inter(
         fontSize: 32.sp,
@@ -36,7 +36,7 @@ class AppTheme {
         fontSize: 16.sp,
         fontWeight: FontWeight.w600,
         height: 1.2.h,
-        color: textColor,
+        color: buttonTextColor,
       ),
       bodySmall: GoogleFonts.inter(
         fontSize: 12.sp,
@@ -51,23 +51,29 @@ class AppTheme {
     brightness: Brightness.light,
     scaffoldBackgroundColor: AppLightColors.background,
     primaryColor: AppLightColors.primary,
+    focusColor: AppLightColors.activeBorderColor,
+    hintColor: AppLightColors.hintColor,
     colorScheme: ColorScheme.light(
       primary: AppLightColors.primary,
       secondary: AppLightColors.accent,
       error: AppSharedColors.error,
+      outline: AppLightColors. borderColor,
     ),
-    textTheme: textTheme(AppLightColors.mainText),
+    textTheme: textTheme(AppLightColors.mainText, AppLightColors.buttonTextColor),
   );
 
   static ThemeData dark = ThemeData(
     brightness: Brightness.dark,
     scaffoldBackgroundColor: AppDarkColors.background,
+    focusColor: AppDarkColors.activeBorderColor,
+    hintColor: AppDarkColors.hintColor,
     primaryColor: AppDarkColors.primary,
     colorScheme: ColorScheme.dark(
+      outline: AppDarkColors. borderColor,
       primary: AppDarkColors.primary,
       secondary: AppDarkColors.accent,
       error: AppSharedColors.error,
     ),
-    textTheme: textTheme(AppDarkColors.mainText),
+    textTheme: textTheme(AppDarkColors.mainText, AppDarkColors.buttonTextColor),
   );
 }

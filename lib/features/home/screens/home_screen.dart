@@ -12,8 +12,9 @@ class HomeScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Center(
         child: Text(
-          'Home Screen',
+          'Welcome ${controller.user?.fullName ?? 'Guest'}\nYou are now logged in!',
           style: Theme.of(context).textTheme.headlineSmall,
+          textAlign: TextAlign.center,
         ),
       ),
     );
