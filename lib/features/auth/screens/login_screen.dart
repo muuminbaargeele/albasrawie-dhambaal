@@ -19,7 +19,7 @@ class LoginScreen extends GetView<LoginController> {
     final controller = Get.find<LoginController>();
 
     return Scaffold(
-      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           const TopWaveWidget(),
@@ -45,6 +45,7 @@ class LoginScreen extends GetView<LoginController> {
                       hintText: "Lambar ama farriin-danabeed",
                       icon: LucideIcons.mail,
                       controller: controller.emailController,
+                      keyboardType: TextInputType.emailAddress,
                     ),
                     SizedBox(height: 16.h),
                     CustomTextField(
@@ -53,6 +54,7 @@ class LoginScreen extends GetView<LoginController> {
                       controller: controller.passwordController,
                       obscureText: true,
                       obscureTextRx: controller.passwordObscure,
+                      keyboardType: TextInputType.visiblePassword,
                     ),
                     SizedBox(height: 8.h),
                     ForgotPasswordLink(onTap: () {}),
