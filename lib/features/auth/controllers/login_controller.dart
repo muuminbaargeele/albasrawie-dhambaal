@@ -41,15 +41,13 @@ class LoginController extends GetxController {
       callback: (status, result, error) {
         isLoading.value = false;
 
-        print(status);
         if (status) {
           final user = UserModel.fromJson(result);
           _storageService.saveUser(user);
-          CustomSnackbar.showSuccess("Login successful");
           Get.offAllNamed(AppRoutes.home);
         } else {
           print(error);
-          CustomSnackbar.showError(title:  "Login Failed", error ?? "Unknown error");
+          CustomSnackbar.showError(title:  "Xisaabtaada lama furi karo", error ?? "Cilad farsamo ayaa dhacay");
         }
       },
     );
