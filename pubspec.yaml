@@ -1,6 +1,6 @@
 name: albasrawie_dhambaal
 description: "Albasrawie Dhambaal messaging app."
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
@@ -20,6 +20,8 @@ dependencies:
   google_fonts: ^6.2.1
   intl: ^0.20.2
   lucide_icons: ^0.257.0
+  socket_io_client: ^3.1.2
+  web_socket_channel: ^3.0.3
 
 dev_dependencies:
   flutter_lints: ^5.0.0

@@ -19,111 +19,154 @@ class ChatsContainer extends StatelessWidget {
       child: Obx(() {
         final chats = controller.filteredChats;
         return controller.allChats.isEmpty
-            ? Center(child: SizedBox(child: CircularProgressIndicator.adaptive()))
+            ? Center(
+                child: SizedBox(child: CircularProgressIndicator.adaptive()),
+              )
             : ListView.builder(
                 itemCount: chats.length,
                 itemBuilder: (context, index) {
                   final chat = chats[index];
-                  final displayName = chat.receiverFullName.isNotEmpty
-                      ? chat.receiverFullName
-                      : chat.senderFullName;
-                  final displayImage = chat.receiverImage;
-                  final messagePreview = chat.content ?? "No messages yet";
+                  final displayName = chat.receiver.fullName.isNotEmpty
+                      ? chat.receiver.fullName
+                      : chat.sender.fullName;
+                  final displayImage = chat.receiver.image;
+                  final messagePreview = chat.chat.isNotEmpty
+                      ? chat.chat[0].content
+                      : "Dhambaal cusub dir.";
+                  final statusIcon =
+                      chat.chat.isNotEmpty &&
+                          chat.chat[0].status != null &&
+                          chat.chat[0].senderId == controller.user!.traineeId
+                      ? switch (chat.chat[0].status) {
+                          'sent' => LucideIcons.check,
+                          'delivered' || 'seen' => LucideIcons.checkCheck,
+                          _ => null,
+                        }
+                      : null;
+
+                  final statusIconColor =
+                      chat.chat.isNotEmpty && chat.chat[0].status != null
+                      ? switch (chat.chat[0].status) {
+                          'seen' => Theme.of(context).colorScheme.secondary,
+                          'delivered' || 'sent' => Theme.of(context).hintColor,
+                          _ => null,
+                        }
+                      : null;
 
                   return Builder(
                     builder: (context) {
-                      return InkWell(
-                        onTap: () {},
-                        child: Padding(
-                          padding: EdgeInsets.fromLTRB(
-                            16.w,
-                            (index == 0) ? 20.h : 8,
-                            16.w,
-                            8.h,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              CachedCircleImageWidget(
-                                imageUrl: Constants.imagePath + displayImage,
-                                fallbackText: displayName,
+                      return Column(
+                        children: [
+                          InkWell(
+                            onTap: () {},
+                            child: Padding(
+                              padding: EdgeInsets.fromLTRB(
+                                16.w,
+                                (index == 0) ? 20.h : 8,
+                                16.w,
+                                8.h,
                               ),
-                              SizedBox(width: 12.w),
-                              Expanded(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Row(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  CachedCircleImageWidget(
+                                    imageUrl:
+                                        Constants.imagePath + displayImage,
+                                    fallbackText: displayName,
+                                  ),
+                                  SizedBox(width: 12.w),
+                                  Expanded(
+                                    child: Column(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        SizedBox(
-                                          width: 240.w,
-                                          child: Text(
-                                            displayName,
-                                            style: Theme.of(
-                                              context,
-                                            ).textTheme.displaySmall,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                        Text(
-                                          formatChatTimestamp(
-                                            chat.sentAt ??
-                                                '2025-06-17T13:11:32.407056',
-                                          ),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodySmall
-                                              ?.copyWith(
-                                                color: Theme.of(
-                                                  context,
-                                                ).colorScheme.secondary,
-                                              ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 4.h),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                                          MainAxisAlignment.start,
                                       children: [
                                         Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
                                           children: [
-                                            Icon(
-                                              LucideIcons.checkCheck,
-                                              size: 17.w,
-                                              color: Theme.of(
-                                                context,
-                                              ).hintColor,
-                                            ),
-                                            SizedBox(width: 4.w),
                                             SizedBox(
                                               width: 240.w,
                                               child: Text(
-                                                messagePreview,
+                                                displayName,
                                                 style: Theme.of(
                                                   context,
-                                                ).textTheme.bodySmall,
+                                                ).textTheme.displaySmall,
                                                 overflow: TextOverflow.ellipsis,
                                               ),
                                             ),
+                                            Text(
+                                              chat.chat.isNotEmpty &&
+                                                      chat.chat[0].sentAt !=
+                                                          null
+                                                  ? formatChatTimestamp(
+                                                      chat.chat[0].sentAt!,
+                                                    )
+                                                  : formatChatTimestamp(
+                                                      chat.createdAt,
+                                                    ),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodySmall
+                                                  ?.copyWith(
+                                                    color: Theme.of(
+                                                      context,
+                                                    ).colorScheme.secondary,
+                                                  ),
+                                            ),
                                           ],
                                         ),
-                                        // RoundedCountBadge(text: '1'),
+                                        SizedBox(height: 4.h),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                if (statusIcon != null)
+                                                  Icon(
+                                                    statusIcon,
+                                                    size: 17.w,
+                                                    color: statusIconColor,
+                                                  ),
+                                                if (statusIcon != null)
+                                                  SizedBox(width: 4.w),
+                                                SizedBox(
+                                                  width: 240.w,
+                                                  child: Text(
+                                                    messagePreview ?? "",
+                                                    style: Theme.of(
+                                                      context,
+                                                    ).textTheme.bodySmall,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            // RoundedCountBadge(text: '1'),
+                                          ],
+                                        ),
                                       ],
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
-                        ),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(76.w, 0, 16.w, 0),
+                            child: Container(
+                              height: 0.05,
+                              width: double.infinity,
+                              color: Theme.of(context).hintColor,
+                            ),
+                          ),
+                        ],
                       );
                     },
                   );

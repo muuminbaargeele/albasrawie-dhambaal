@@ -14,7 +14,6 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<HomeController>();
-    controller.getActiveParticipantsAndChats();
     return Scaffold(
       body: SafeArea(
         child: Column(
