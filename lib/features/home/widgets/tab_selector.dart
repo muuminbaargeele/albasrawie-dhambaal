@@ -13,7 +13,7 @@ class TabSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: 12.h),
+      padding: EdgeInsets.only(top: 12.h, bottom: 12.h),
       child: SizedBox(
         height: 35.h,
         child: ListView.builder(

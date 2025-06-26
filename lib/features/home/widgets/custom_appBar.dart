@@ -1,18 +1,12 @@
+import 'package:albasrawie_dhambaal/features/home/controllers/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 class CustomAppBar extends StatelessWidget {
-  const CustomAppBar({
-    super.key,
-    required this.cameraOnTap,
-    required this.searchOnTap,
-    required this.dotsOnTap,
-  });
+  const CustomAppBar({super.key, required this.controller});
 
-  final VoidCallback cameraOnTap;
-  final VoidCallback searchOnTap;
-  final VoidCallback dotsOnTap;
+  final HomeController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -30,19 +24,19 @@ class CustomAppBar extends StatelessWidget {
           Row(
             children: [
               IconButton(
-                onPressed: cameraOnTap,
+                onPressed: () {},
                 icon: Icon(LucideIcons.camera),
                 padding: EdgeInsets.zero,
                 visualDensity: VisualDensity.compact,
               ),
               IconButton(
-                onPressed: searchOnTap,
+                onPressed: () {},
                 icon: Icon(LucideIcons.search),
                 padding: EdgeInsets.zero,
                 visualDensity: VisualDensity.compact,
               ),
               IconButton(
-                onPressed: dotsOnTap,
+                onPressed: () {},
                 icon: Icon(LucideIcons.moreVertical),
                 padding: EdgeInsets.zero,
                 visualDensity: VisualDensity.compact,

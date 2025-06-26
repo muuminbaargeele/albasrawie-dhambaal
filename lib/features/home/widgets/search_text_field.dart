@@ -21,7 +21,7 @@ class SearchTextField extends StatelessWidget {
     this.controller,
     this.obscureText = false,
     this.obscureTextRx,
-    this.keyboardType = TextInputType.none,
+    this.keyboardType = TextInputType.name,
     this.onChanged,
   });
 

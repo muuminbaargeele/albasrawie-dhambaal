@@ -7,6 +7,8 @@ import '../../../core/constants/constants.dart';
 import '../../../core/utils/time_utils.dart';
 import '../../../shared/widgets/cached_circle_image_widget.dart';
 import '../controllers/home_controller.dart';
+import 'search_text_field.dart';
+import 'tab_selector.dart';
 
 class ChatsContainer extends StatelessWidget {
   const ChatsContainer({super.key, required this.controller});
@@ -23,9 +25,22 @@ class ChatsContainer extends StatelessWidget {
                 child: SizedBox(child: CircularProgressIndicator.adaptive()),
               )
             : ListView.builder(
-                itemCount: chats.length,
+                itemCount: chats.length + 2,
                 itemBuilder: (context, index) {
-                  final chat = chats[index];
+                  if (index == 0) {
+                    return SearchTextField(
+                      hintText: "Search",
+                      icon: LucideIcons.search,
+                      controller: controller.searchController,
+                      onChanged: (value) {
+                        controller.searchQuery.value = value;
+                      },
+                    );
+                  }
+                  if (index == 1) {
+                    return TabSelector();
+                  }
+                  final chat = chats[index - 2];
                   final displayName = chat.receiver.fullName.isNotEmpty
                       ? chat.receiver.fullName
                       : chat.sender.fullName;
@@ -64,7 +79,7 @@ class ChatsContainer extends StatelessWidget {
                             child: Padding(
                               padding: EdgeInsets.fromLTRB(
                                 16.w,
-                                (index == 0) ? 20.h : 8,
+                                8.h,
                                 16.w,
                                 8.h,
                               ),
@@ -163,7 +178,7 @@ class ChatsContainer extends StatelessWidget {
                           Padding(
                             padding: EdgeInsets.fromLTRB(76.w, 0, 16.w, 0),
                             child: Container(
-                              height: 0.05,
+                              height: 0.2,
                               width: double.infinity,
                               color: Theme.of(context).hintColor,
                             ),
