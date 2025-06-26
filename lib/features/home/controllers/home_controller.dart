@@ -1,3 +1,5 @@
+import 'package:albasrawie_dhambaal/routes/app_routes.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -148,9 +150,15 @@ class HomeController extends GetxController {
         }
 
       } catch (e) {
-        print('❌ Error handling socket message: $e');
+        if (kDebugMode) {
+          print('❌ Error handling socket message: $e');
+        }
       }
     });
+  }
+
+  void navigateToChat(ChatParticipant chat) {
+    Get.toNamed(AppRoutes.chat,arguments: chat);
   }
 
   @override

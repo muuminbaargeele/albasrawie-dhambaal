@@ -1,4 +1,5 @@
-import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:flutter/foundation.dart';
+import 'package:socket_io_client/socket_io_client.dart' as io;
 
 import '../constants/constants.dart';
 
@@ -7,30 +8,38 @@ class SocketService {
   factory SocketService() => _instance;
   SocketService._internal();
 
-  late IO.Socket _socket;
+  late io.Socket _socket;
 
   void connect() {
-    _socket = IO.io(Constants.devBaseUrl, <String, dynamic>{
+    _socket = io.io(Constants.devBaseUrl, <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': true,
     });
 
     _socket.onConnect((_) {
-      print('✅ Socket.IO connected to ${Constants.devBaseUrl}');
+      if (kDebugMode) {
+        print('✅ Socket.IO connected to ${Constants.devBaseUrl}');
+      }
     });
 
     _socket.onDisconnect((_) {
-      print('🔌 Socket.IO disconnected');
+      if (kDebugMode) {
+        print('🔌 Socket.IO disconnected');
+      }
     });
 
     _socket.onError((error) {
-      print('❌ Socket.IO error: $error');
+      if (kDebugMode) {
+        print('❌ Socket.IO error: $error');
+      }
     });
   }
 
   void emit(String event, dynamic data) {
     _socket.emit(event, data);
-    print("📤 Emitted [$event]: $data");
+    if (kDebugMode) {
+      print("📤 Emitted [$event]: $data");
+    }
   }
 
   void on(String event, Function(dynamic) callback) {
@@ -43,7 +52,9 @@ class SocketService {
 
   void disconnect() {
     _socket.disconnect();
-    print("🔌 Socket.IO manually disconnected");
+    if (kDebugMode) {
+      print("🔌 Socket.IO manually disconnected");
+    }
   }
 
   bool get isConnected => _socket.connected;

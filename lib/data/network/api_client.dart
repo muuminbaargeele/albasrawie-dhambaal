@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import '../../core/constants/constants.dart';
 import '../responses/base_response.dart';
 
@@ -19,10 +20,10 @@ class ApiClient {
     try {
       final response = await _dio.get(path);
       final baseResponse = BaseResponse.fromJson(response.data, (json) => json);
-      if (baseResponse.status_code == 200 && baseResponse.result != null) {
+      if (baseResponse.statusCode == 200 && baseResponse.result != null) {
         callback(true, baseResponse.result, null);
       } else {
-        callback(false, null, baseResponse.error?.message ?? 'Unknown error');
+        callback(false, null, baseResponse.error?.message ?? 'Cilad farsamo ayaa dhacay');
       }
     } catch (e) {
       _handleDioError(e, callback);
@@ -37,10 +38,10 @@ class ApiClient {
     try {
       final response = await _dio.get(path, options: Options(headers: headers));
       final baseResponse = BaseResponse.fromJson(response.data, (json) => json);
-      if (baseResponse.status_code == 200 && baseResponse.result != null) {
+      if (baseResponse.statusCode == 200 && baseResponse.result != null) {
         callback(true, baseResponse.result, null);
       } else {
-        callback(false, null, baseResponse.error?.message ?? 'Unknown error');
+        callback(false, null, baseResponse.error?.message ?? 'Cilad farsamo ayaa dhacay');
       }
     } catch (e) {
       _handleDioError(e, callback);
@@ -55,10 +56,10 @@ class ApiClient {
     try {
       final response = await _dio.post(path, data: data);
       final baseResponse = BaseResponse.fromJson(response.data, (json) => json);
-      if (baseResponse.status_code == 200 && baseResponse.result != null) {
+      if (baseResponse.statusCode == 200 && baseResponse.result != null) {
         callback(true, baseResponse.result, null);
       } else {
-        callback(false, null, baseResponse.error?.message ?? 'Unknown error');
+        callback(false, null, baseResponse.error?.message ?? 'Cilad farsamo ayaa dhacay');
       }
     } catch (e) {
       _handleDioError(e, callback);
@@ -74,10 +75,10 @@ class ApiClient {
     try {
       final response = await _dio.post(path, data: data, options: Options(headers: headers));
       final baseResponse = BaseResponse.fromJson(response.data, (json) => json);
-      if (baseResponse.status_code == 200 && baseResponse.result != null) {
+      if (baseResponse.statusCode == 200 && baseResponse.result != null) {
         callback(true, baseResponse.result, null);
       } else {
-        callback(false, null, baseResponse.error?.message ?? 'Unknown error');
+        callback(false, null, baseResponse.error?.message ?? 'Cilad farsamo ayaa dhacay');
       }
     } catch (e) {
       _handleDioError(e, callback);
@@ -85,34 +86,36 @@ class ApiClient {
   }
 
   static void _handleDioError(dynamic error, void Function(bool, dynamic, String?) callback) {
-    String errorMessage = 'Something went wrong';
+    String errorMessage = 'Adeeggu wuu ciladaysan yahay';
     if (error is DioException) {
       switch (error.type) {
         case DioExceptionType.connectionTimeout:
         case DioExceptionType.sendTimeout:
         case DioExceptionType.receiveTimeout:
-          errorMessage = 'Connection timed out. Please try again.';
+          errorMessage = 'Amminta ayaa ka dhacday isku-xirka adeegga. Fadlan isku day mar kale.';
           break;
         case DioExceptionType.badResponse:
-          errorMessage = 'Server error. Please try again later.';
+          errorMessage = 'Adeeggu wuu ciladaysan yahay. Fadlan dib u tijaabi ammin yar kadib.';
           break;
         case DioExceptionType.cancel:
-          errorMessage = 'Request was cancelled.';
+          errorMessage = 'Codsiga waa la jooyiyey. Fadlan in yar sug.';
           break;
         case DioExceptionType.connectionError:
-          errorMessage = 'Connection error. Please check your internet.';
+          errorMessage = 'Internet lama helin: Fadlan hubi qadkaaga.';
           break;
         case DioExceptionType.unknown:
-          errorMessage = 'Unknown error occurred. Please try again.';
+          errorMessage = 'Cilad farsamo ayaa dhacay, fadlan mar kale isku day.';
           break;
         default:
-          errorMessage = error.message ?? 'Something went wrong.';
+          errorMessage = error.message ?? 'Adeeggu wuu ciladaysan yahay.';
       }
     } else {
       errorMessage = error.toString();
     }
 
-    print('[DioException] $error');
+    if (kDebugMode) {
+      print('[DioException] $error');
+    }
     callback(false, null, errorMessage);
   }
 }

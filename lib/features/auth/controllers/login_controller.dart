@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/services/storage_service.dart';
@@ -46,7 +47,9 @@ class LoginController extends GetxController {
           _storageService.saveUser(user);
           Get.offAllNamed(AppRoutes.home);
         } else {
-          print(error);
+          if (kDebugMode) {
+            print(error);
+          }
           CustomSnackbar.showError(title:  "Xisaabtaada lama furi karo", error ?? "Cilad farsamo ayaa dhacay");
         }
       },

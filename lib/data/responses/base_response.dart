@@ -1,10 +1,10 @@
 class BaseResponse<T> {
-  final int status_code;
+  final int statusCode;
   final T? result;
   final ErrorPayload? error;
 
   BaseResponse({
-    required this.status_code,
+    required this.statusCode,
     required this.result,
     required this.error,
   });
@@ -14,7 +14,7 @@ class BaseResponse<T> {
     T Function(dynamic json) fromJsonT,
   ) {
     return BaseResponse<T>(
-      status_code: json['status_code'],
+      statusCode: json['status_code'],
       result: json['payload']['result'] != null
           ? fromJsonT(json['payload']['result'])
           : null,

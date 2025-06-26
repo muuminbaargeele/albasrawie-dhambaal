@@ -58,7 +58,9 @@ class ChatsContainer extends StatelessWidget {
                       return Column(
                         children: [
                           InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              controller.navigateToChat(chat);
+                            },
                             child: Padding(
                               padding: EdgeInsets.fromLTRB(
                                 16.w,
