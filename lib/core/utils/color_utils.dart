@@ -1,11 +1,24 @@
 import 'package:flutter/material.dart';
 
-Color adjustColorBrightness(Color color) {
-  final brightness = ThemeData.estimateBrightnessForColor(color);
+Color adjustColorBrightness(
+  Color color, {
+  double amount = 0.05,
+  String? operator, // '+' or '-' or null
+}) {
   final hsl = HSLColor.fromColor(color);
-  final adjustedLightness =
-      (hsl.lightness + (brightness == Brightness.dark ? 0.05 : -0.05))
-          .clamp(0.0, 1.0);
+  double adjustment;
+
+  if (operator == '+') {
+    adjustment = amount;
+  } else if (operator == '-') {
+    adjustment = -amount;
+  } else {
+    final brightness = ThemeData.estimateBrightnessForColor(color);
+    adjustment = brightness == Brightness.dark ? amount : -amount;
+  }
+
+  final adjustedLightness = (hsl.lightness + adjustment).clamp(0.0, 1.0);
+
   return hsl.withLightness(adjustedLightness).toColor();
 }
 

@@ -124,7 +124,6 @@ class HomeController extends GetxController {
         final index = allChats.indexWhere((chat) => chat.chatId == chatId);
 
         if (index != -1) {
-          final chat = allChats[index];
 
           // Create new ChatMessage
           final newMessage = ChatMessage(
@@ -132,7 +131,7 @@ class HomeController extends GetxController {
             deletedBy: null,
             deliveredAt: null,
             groupDesc: null,
-            groupName: chat.chat.first.groupName,
+            groupName: "",
             isDeleted: 0,
             isGroup: 0,
             messageId: null,

@@ -38,10 +38,12 @@ class ChatAppBar extends StatelessWidget {
                     children: [
                       Material(
                         color: Colors.transparent,
+                        borderRadius: BorderRadius.circular(20),
                         child: InkWell(
                           onTap: () {
                             Get.back();
                           },
+                          borderRadius: BorderRadius.circular(20),
                           child: Row(
                             children: [
                               Icon(LucideIcons.chevronLeft),
@@ -54,14 +56,14 @@ class ChatAppBar extends StatelessWidget {
                       CachedCircleImageWidget(
                         imageUrl:
                             Constants.imagePath +
-                            controller.chatMessage!.receiver.image,
+                            controller.chatMessage.value!.receiver.image,
                         fallbackText:
-                            controller.chatMessage!.receiver.fullName,
+                            controller.chatMessage.value!.receiver.fullName,
                         size: 38,
                       ),
                       SizedBox(width: 12.w),
                       Text(
-                        controller.chatMessage!.receiver.fullName,
+                        controller.chatMessage.value!.receiver.fullName,
                         style: Theme.of(context).textTheme.displaySmall,
                         overflow: TextOverflow.ellipsis,
                       ),

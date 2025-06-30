@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 
 class ResponsiveBackground extends StatelessWidget {
-  final Widget child;
+  final Widget? child;
+  final bool positioned;
+  final BoxFit fit;
 
-  const ResponsiveBackground({super.key, required this.child});
+  const ResponsiveBackground({
+    super.key,
+    this.child,
+    this.positioned = true,
+    this.fit = BoxFit.cover,
+  });
 
   bool _isTablet(BuildContext context) {
     return MediaQuery.of(context).size.shortestSide >= 600;
@@ -27,14 +34,18 @@ class ResponsiveBackground extends StatelessWidget {
   Widget build(BuildContext context) {
     final bgImage = _getBackgroundImage(context);
 
+    final image = Image.asset(
+      bgImage,
+      fit: fit,
+    );
+
+    final background = positioned ? Positioned.fill(child: image) : image;
+
     return Stack(
       fit: StackFit.expand,
       children: [
-        Image.asset(
-          bgImage,
-          fit: BoxFit.cover,
-        ),
-        child,
+        background,
+        if (child != null) child!,
       ],
     );
   }

@@ -62,7 +62,7 @@ class ChatsContainer extends StatelessWidget {
                   final statusIconColor =
                       chat.chat.isNotEmpty && chat.chat[0].status != null
                       ? switch (chat.chat[0].status) {
-                          'seen' => Theme.of(context).colorScheme.secondary,
+                          'seen' => Theme.of(context).scaffoldBackgroundColor,
                           'delivered' || 'sent' => Theme.of(context).hintColor,
                           _ => null,
                         }
@@ -143,6 +143,7 @@ class ChatsContainer extends StatelessWidget {
                                               CrossAxisAlignment.center,
                                           children: [
                                             Row(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 if (statusIcon != null)
                                                   Icon(
@@ -155,10 +156,15 @@ class ChatsContainer extends StatelessWidget {
                                                 SizedBox(
                                                   width: 240.w,
                                                   child: Text(
-                                                    messagePreview ?? "",
+                                                    messagePreview?.replaceAll(
+                                                          '\n',
+                                                          ' ',
+                                                        ) ??
+                                                        "",
                                                     style: Theme.of(
                                                       context,
                                                     ).textTheme.bodySmall,
+                                                    maxLines: 2,
                                                     overflow:
                                                         TextOverflow.ellipsis,
                                                   ),
