@@ -2,6 +2,7 @@ import 'package:albasrawie_dhambaal/features/chat/controllers/chat_controller.da
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/utils/color_utils.dart';
+import '../../../shared/widgets/dismiss_keyboard.dart';
 import '../../../shared/widgets/responsive_background.dart';
 import '../widgets/bottom_bar.dart';
 import '../widgets/chat_app_bar.dart';
@@ -34,51 +35,53 @@ class ChatScreen extends GetView<ChatController> {
       operator: isDarkMode ? "+" : null,
       amount: isDarkMode ? 0.10 : 0,
     );
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Stack(
-        children: [
-          ResponsiveBackground(),
-          Positioned(
-            top: 0,
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ChatAppBar(
-                  adjusted: adjusted,
-                  isNeedSafeArea: isNeedTopSafeArea,
-                  controller: controller,
-                ),
-                ChatWidget(
-                  controller: controller,
-                  adjustedChat: adjustedChat,
-                  adjusted: adjusted,
-                ),
-                SingleChildScrollView(
-                  child: AnimatedPadding(
-                    duration: const Duration(milliseconds: 150),
-                    curve: Curves.easeOut,
-                    padding: EdgeInsets.only(
-                      bottom: MediaQuery.of(context).viewInsets.bottom,
-                    ),
-                    child: BottomBar(
-                      adjusted: adjusted,
-                      bottomInset: bottomInset,
-                      adjustedField: adjustedField,
-                      controller: controller,
-                      onChanged: (value) {
-                        controller.messageQuery.value = value;
-                      },
+    return DismissKeyboard(
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Stack(
+          children: [
+            ResponsiveBackground(),
+            Positioned(
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ChatAppBar(
+                    adjusted: adjusted,
+                    isNeedSafeArea: isNeedTopSafeArea,
+                    controller: controller,
+                  ),
+                  ChatWidget(
+                    controller: controller,
+                    adjustedChat: adjustedChat,
+                    adjusted: adjusted,
+                  ),
+                  SingleChildScrollView(
+                    child: AnimatedPadding(
+                      duration: const Duration(milliseconds: 150),
+                      curve: Curves.easeOut,
+                      padding: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).viewInsets.bottom,
+                      ),
+                      child: BottomBar(
+                        adjusted: adjusted,
+                        bottomInset: bottomInset,
+                        adjustedField: adjustedField,
+                        controller: controller,
+                        onChanged: (value) {
+                          controller.messageQuery.value = value;
+                        },
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

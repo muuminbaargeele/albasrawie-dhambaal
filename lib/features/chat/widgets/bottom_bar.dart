@@ -107,8 +107,8 @@ class BottomBar extends StatelessWidget {
                   margin: EdgeInsets.symmetric(horizontal: 8.w),
                   child: IconButton(
                     onPressed: () {
-                      controller.sendMassage();
-                      controller.sendMassageWithSocket();
+                      controller.sendMessage();
+                      controller.sendMessageWithSocket();
                     },
                     icon: Icon(Icons.send),
                     padding: EdgeInsets.zero,

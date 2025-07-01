@@ -7,6 +7,7 @@ import '../../../core/services/socket_service.dart';
 import '../../../core/services/storage_service.dart';
 import '../../../data/models/chat/chat_message_model.dart';
 import '../../../data/models/user_model.dart';
+import '../../home/controllers/home_controller.dart';
 
 class ChatController extends GetxController {
   final ChatRepository _chatRepository = ChatRepository();
@@ -20,26 +21,80 @@ class ChatController extends GetxController {
   final isSending = false.obs;
   var messageQuery = ''.obs;
 
-  List<ChatMessage> get currentMessages => chatMessage.value?.chat ?? [];
+  final ScrollController scrollController = ScrollController();
+  final RxBool showScrollButton = false.obs;
+  final RxInt newMessagesCount = 0.obs;
+  int oldChatsLength = 0;
+
+  List<ChatMessage> get currentMessages {
+    final home = Get.find<HomeController>();
+    final chat = home.allChats.firstWhereOrNull((c) => c.chatId == chatMessage.value?.chatId);
+    return chat?.chat ?? [];
+  }
 
   @override
   void onInit() {
     super.onInit();
-    chatMessage.value = Get.arguments;
+    final homeController = Get.find<HomeController>();
+    final passedChat = Get.arguments as ChatParticipant;
+    chatMessage.value = passedChat;
     user = _storageService.getUser();
+
+    ever(homeController.allChats, (_) {
+      final updated = homeController.allChats
+          .firstWhereOrNull((c) => c.chatId == passedChat.chatId);
+      if (updated != null) {
+        chatMessage.value = updated;
+      }
+    });
 
     messageController.addListener(() {
       messageQuery.value = messageController.text;
     });
 
     ever(messageQuery, (_) => checkIsSending());
+
+    setupScrollListener();
+  }
+
+  @override
+  void onClose() {
+    messageController.dispose();
+    super.onClose();
   }
 
   void checkIsSending() {
     isSending.value = messageQuery.value.trim().isNotEmpty;
   }
 
-  Future<void> sendMassage() async {
+  void setupScrollListener() {
+    scrollController.addListener(() {
+      final atBottom = scrollController.hasClients && scrollController.offset <= 50;
+      showScrollButton.value = !atBottom;
+      if (atBottom) newMessagesCount.value = 0;
+    });
+  }
+
+  void scrollToBottom() {
+    scrollController.animateTo(
+      0,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+    );
+    newMessagesCount.value = 0;
+  }
+
+  void trackNewMessages(List<ChatMessage> chats) {
+    if (chats.length > oldChatsLength) {
+      final atBottom = scrollController.hasClients && scrollController.offset <= 50;
+      if (!atBottom) {
+        newMessagesCount.value += chats.length - oldChatsLength;
+      }
+    }
+    oldChatsLength = chats.length;
+  }
+
+  Future<void> sendMessage() async {
     final message = messageController.text.trim();
 
     if (message.isEmpty) {
@@ -63,7 +118,7 @@ class ChatController extends GetxController {
     );
   }
 
-  Future<void> sendMassageWithSocket() async {
+  Future<void> sendMessageWithSocket() async {
     final message = messageController.text.trim();
     messageController.clear();
 

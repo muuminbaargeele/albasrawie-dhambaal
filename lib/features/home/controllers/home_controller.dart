@@ -111,43 +111,7 @@ class HomeController extends GetxController {
     _socketService.on('show_chat_tap_on_top', (data) {
       try {
         final result = data['payload']?['result'];
-
-        if (result == null) return;
-
-        final chatId = int.parse(result['chat_id'].toString());
-        final content = result['content'];
-        final createdAt = result['created_at'];
-        final senderId = int.parse(result['sender_id'].toString());
-        final receiverId = int.parse(result['receiver_id'].toString());
-
-        // Find the existing chat
-        final index = allChats.indexWhere((chat) => chat.chatId == chatId);
-
-        if (index != -1) {
-
-          // Create new ChatMessage
-          final newMessage = ChatMessage(
-            content: content,
-            deletedBy: null,
-            deliveredAt: null,
-            groupDesc: null,
-            groupName: "",
-            isDeleted: 0,
-            isGroup: 0,
-            messageId: null,
-            messageType: "text",
-            quotedMessageId: null,
-            receiverId: receiverId,
-            seenAt: null,
-            senderId: senderId,
-            sentAt: createdAt,
-            status: "sent",
-          );
-
-          allChats[index].chat.insert(0, newMessage);
-          allChats.refresh();
-        }
-
+        if (result != null) updateChatFromSocket(result);
       } catch (e) {
         if (kDebugMode) {
           print('❌ Error handling socket message: $e');
@@ -156,14 +120,45 @@ class HomeController extends GetxController {
     });
   }
 
+  void updateChatFromSocket(Map<String, dynamic> result) {
+    final chatId = int.parse(result['chat_id'].toString());
+    final content = result['content'];
+    final createdAt = result['created_at'];
+    final senderId = int.parse(result['sender_id'].toString());
+    final receiverId = int.parse(result['receiver_id'].toString());
+
+    final index = allChats.indexWhere((chat) => chat.chatId == chatId);
+    if (index != -1) {
+      final newMessage = ChatMessage(
+        content: content,
+        deletedBy: null,
+        deliveredAt: null,
+        groupDesc: null,
+        groupName: "",
+        isDeleted: 0,
+        isGroup: 0,
+        messageId: null,
+        messageType: "text",
+        quotedMessageId: null,
+        receiverId: receiverId,
+        seenAt: null,
+        senderId: senderId,
+        sentAt: createdAt,
+        status: "sent",
+      );
+      allChats[index].chat.insert(0, newMessage);
+      allChats.refresh();
+    }
+  }
+
   void navigateToChat(ChatParticipant chat) {
     Get.toNamed(AppRoutes.chat,arguments: chat);
   }
 
   @override
   void onClose() {
-    _socketService.off('show_chat_tap_on_top');
-    _socketService.disconnect();
+    // _socketService.off('show_chat_tap_on_top');
+    // _socketService.disconnect();
     searchController.dispose();
     super.onClose();
   }

@@ -19,7 +19,16 @@ class ChatsContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Obx(() {
-        final chats = controller.filteredChats;
+        final chats = controller.filteredChats.toList()
+          ..sort((a, b) {
+            final aDate = a.chat.isNotEmpty && a.chat[0].sentAt != null
+                ? DateTime.parse(a.chat[0].sentAt!)
+                : DateTime.parse(a.createdAt);
+            final bDate = b.chat.isNotEmpty && b.chat[0].sentAt != null
+                ? DateTime.parse(b.chat[0].sentAt!)
+                : DateTime.parse(b.createdAt);
+            return bDate.compareTo(aDate);
+          });
         return controller.allChats.isEmpty
             ? Center(
                 child: SizedBox(child: CircularProgressIndicator.adaptive()),
