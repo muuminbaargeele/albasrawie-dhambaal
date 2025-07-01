@@ -7,7 +7,7 @@ import '../../../core/services/socket_service.dart';
 import '../../../core/services/storage_service.dart';
 import '../../../data/models/chat/chat_message_model.dart';
 import '../../../data/models/user_model.dart';
-import '../../home/controllers/home_controller.dart';
+import '../../chats/controllers/chats_controller.dart';
 
 class ChatController extends GetxController {
   final ChatRepository _chatRepository = ChatRepository();
@@ -27,21 +27,21 @@ class ChatController extends GetxController {
   int oldChatsLength = 0;
 
   List<ChatMessage> get currentMessages {
-    final home = Get.find<HomeController>();
-    final chat = home.allChats.firstWhereOrNull((c) => c.chatId == chatMessage.value?.chatId);
+    final chats = Get.find<ChatsController>();
+    final chat = chats.allChats.firstWhereOrNull((c) => c.chatId == chatMessage.value?.chatId);
     return chat?.chat ?? [];
   }
 
   @override
   void onInit() {
     super.onInit();
-    final homeController = Get.find<HomeController>();
+    final chatsController = Get.find<ChatsController>();
     final passedChat = Get.arguments as ChatParticipant;
     chatMessage.value = passedChat;
     user = _storageService.getUser();
 
-    ever(homeController.allChats, (_) {
-      final updated = homeController.allChats
+    ever(chatsController.allChats, (_) {
+      final updated = chatsController.allChats
           .firstWhereOrNull((c) => c.chatId == passedChat.chatId);
       if (updated != null) {
         chatMessage.value = updated;

@@ -6,14 +6,14 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../../../core/constants/constants.dart';
 import '../../../core/utils/time_utils.dart';
 import '../../../shared/widgets/cached_circle_image_widget.dart';
-import '../controllers/home_controller.dart';
+import '../controllers/chats_controller.dart';
 import 'search_text_field.dart';
 import 'tab_selector.dart';
 
 class ChatsContainer extends StatelessWidget {
   const ChatsContainer({super.key, required this.controller});
 
-  final HomeController controller;
+  final ChatsController controller;
 
   @override
   Widget build(BuildContext context) {

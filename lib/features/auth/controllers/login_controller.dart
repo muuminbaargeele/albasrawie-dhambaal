@@ -45,7 +45,7 @@ class LoginController extends GetxController {
         if (status) {
           final user = UserModel.fromJson(result);
           _storageService.saveUser(user);
-          Get.offAllNamed(AppRoutes.home);
+          Get.offAllNamed(AppRoutes.chats);
         } else {
           if (kDebugMode) {
             print(error);

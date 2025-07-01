@@ -1,4 +1,4 @@
-import 'package:albasrawie_dhambaal/features/home/controllers/home_controller.dart';
+import 'package:albasrawie_dhambaal/features/chats/controllers/chats_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lucide_icons/lucide_icons.dart';
@@ -6,7 +6,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 class CustomAppBar extends StatelessWidget {
   const CustomAppBar({super.key, required this.controller});
 
-  final HomeController controller;
+  final ChatsController controller;
 
   @override
   Widget build(BuildContext context) {

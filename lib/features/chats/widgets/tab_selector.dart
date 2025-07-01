@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../core/utils/color_utils.dart';
-import '../controllers/home_controller.dart';
+import '../controllers/chats_controller.dart';
 
 class TabSelector extends StatelessWidget {
   TabSelector({super.key});
 
   final List<String> tabs = ['All', 'Unread', 'favourites', 'Groups'];
-  final HomeController controller = Get.find();
+  final ChatsController controller = Get.find();
 
   @override
   Widget build(BuildContext context) {

@@ -11,10 +11,10 @@ import '../../../data/models/active_participant_model.dart';
 import '../../../data/models/chat/chat_message_model.dart';
 import '../../../data/models/chat/chat_participant_model.dart';
 import '../../../data/models/user_model.dart';
-import '../../../data/repositories/home_repository.dart';
+import '../../../data/repositories/chats_repository.dart';
 
-class HomeController extends GetxController {
-  final HomeRepository _homeRepository = HomeRepository();
+class ChatsController extends GetxController {
+  final ChatsRepository _chatsRepository = ChatsRepository();
   final StorageService _storageService = StorageService();
   final SocketService _socketService = SocketService();
 
@@ -63,7 +63,7 @@ class HomeController extends GetxController {
   Future<void> getActiveParticipantsAndChats() async {
     isLoading.value = true;
 
-    await _homeRepository.getActiveParticipantsAndChats(
+    await _chatsRepository.getActiveParticipantsAndChats(
       userId: user!.traineeId.toString(),
       callback: (status, result, error) {
         isLoading.value = false;

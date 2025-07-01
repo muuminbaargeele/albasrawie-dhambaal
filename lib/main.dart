@@ -38,7 +38,7 @@ class MainApp extends StatelessWidget {
       darkTheme: AppTheme.dark,
       themeMode: ThemeMode.system,
       initialBinding: AppBinding(),
-      initialRoute: isLoggedIn ? AppRoutes.home : AppRoutes.login,
+      initialRoute: isLoggedIn ? AppRoutes.main : AppRoutes.login,
       getPages: AppPages.routes,
     );
   }

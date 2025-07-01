@@ -1,10 +1,12 @@
 import 'package:albasrawie_dhambaal/features/chat/controllers/chat_controller.dart';
 import 'package:albasrawie_dhambaal/features/chat/screens/chat_screen.dart';
+import 'package:albasrawie_dhambaal/features/main/controllers/main_controller.dart';
+import 'package:albasrawie_dhambaal/features/main/screens/main_screen.dart';
 import 'package:get/get.dart';
 import '../features/auth/screens/login_screen.dart';
-import '../features/home/screens/home_screen.dart';
+import '../features/chats/screens/chats_screen.dart';
 import '../features/auth/controllers/login_controller.dart';
-import '../features/home/controllers/home_controller.dart';
+import '../features/chats/controllers/chats_controller.dart';
 import 'app_routes.dart';
 
 class AppPages {
@@ -17,10 +19,17 @@ class AppPages {
       }),
     ),
     GetPage(
-      name: AppRoutes.home,
-      page: () => const HomeScreen(),
+      name: AppRoutes.main,
+      page: () => const MainScreen(),
       binding: BindingsBuilder(() {
-        Get.lazyPut(() => HomeController());
+        Get.lazyPut(() => MainController());
+      }),
+    ),
+    GetPage(
+      name: AppRoutes.chats,
+      page: () => const ChatsScreen(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut(() => ChatsController());
       }),
     ),
     GetPage(

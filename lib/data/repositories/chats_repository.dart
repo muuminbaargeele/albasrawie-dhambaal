@@ -1,6 +1,6 @@
 import '../network/api_client.dart';
 
-class HomeRepository {
+class ChatsRepository {
   Future<void> getActiveParticipantsAndChats({
     required String userId,
     required void Function(bool status, dynamic result, String? error) callback,
