@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import '../../../core/services/notification_service.dart';
 import '../../../core/services/storage_service.dart';
 import '../../../core/services/socket_service.dart';
 import 'dart:async';
@@ -30,6 +31,11 @@ class ChatsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    NotificationService.showNotification(
+      title: 'Test Notification',
+      body: 'This is a test message',
+    );
+
     user = _storageService.getUser();
     final cached = GetStorage().read('chat_participants');
     if (cached != null) {
@@ -52,7 +58,9 @@ class ChatsController extends GetxController {
       searchQuery.value = searchController.text;
     });
     _socketService.connect();
-    _socketService.emit('subscribe_to_event', {'event': 'show_chat_tap_on_top'});
+    _socketService.emit('subscribe_to_event', {
+      'event': 'show_chat_tap_on_top',
+    });
     _listenToSocket();
   }
 
@@ -127,7 +135,11 @@ class ChatsController extends GetxController {
     final senderId = int.parse(result['sender_id'].toString());
     final receiverId = int.parse(result['receiver_id'].toString());
 
+    final title = result['sender']?['sender_full_name'] ?? 'New Message';
+    final message = content ?? '';
+
     final index = allChats.indexWhere((chat) => chat.chatId == chatId);
+
     if (index != -1) {
       final newMessage = ChatMessage(
         content: content,
@@ -146,13 +158,17 @@ class ChatsController extends GetxController {
         sentAt: createdAt,
         status: "sent",
       );
+
       allChats[index].chat.insert(0, newMessage);
       allChats.refresh();
     }
+
+    // Show notification for new message
+    NotificationService.showNotification(title: title, body: message);
   }
 
   void navigateToChat(ChatParticipant chat) {
-    Get.toNamed(AppRoutes.chat,arguments: chat);
+    Get.toNamed(AppRoutes.chat, arguments: chat);
   }
 
   @override

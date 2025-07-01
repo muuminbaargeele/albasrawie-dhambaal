@@ -47,5 +47,11 @@
 		</array>
 		<key>UIStatusBarHidden</key>
 		<false/>
+		<key>UIBackgroundModes</key>
+		<array>
+			<string>remote-notification</string>
+		</array>
+		<key>NSUserNotificationAlertStyle</key>
+		<string>alert</string>
 	</dict>
 </plist>
