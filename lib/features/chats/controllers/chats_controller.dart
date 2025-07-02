@@ -20,6 +20,8 @@ class ChatsController extends GetxController {
   final SocketService _socketService = SocketService();
 
   var selectedTabIndex = 0.obs;
+  var currentChatId = 0;
+  var isChatOpen = false;
   late final UserModel? user;
   final searchController = TextEditingController();
   var searchQuery = ''.obs;
@@ -31,10 +33,6 @@ class ChatsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    NotificationService.showNotification(
-      title: 'Test Notification',
-      body: 'This is a test message',
-    );
 
     user = _storageService.getUser();
     final cached = GetStorage().read('chat_participants');
@@ -58,9 +56,6 @@ class ChatsController extends GetxController {
       searchQuery.value = searchController.text;
     });
     _socketService.connect();
-    _socketService.emit('subscribe_to_event', {
-      'event': 'show_chat_tap_on_top',
-    });
     _listenToSocket();
   }
 
@@ -129,13 +124,15 @@ class ChatsController extends GetxController {
   }
 
   void updateChatFromSocket(Map<String, dynamic> result) {
+    print(result);
     final chatId = int.parse(result['chat_id'].toString());
     final content = result['content'];
     final createdAt = result['created_at'];
     final senderId = int.parse(result['sender_id'].toString());
     final receiverId = int.parse(result['receiver_id'].toString());
+    final senderName = result['sender_name'];
 
-    final title = result['sender']?['sender_full_name'] ?? 'New Message';
+    final title = senderName ?? 'Farriin Cusub';
     final message = content ?? '';
 
     final index = allChats.indexWhere((chat) => chat.chatId == chatId);
@@ -164,11 +161,31 @@ class ChatsController extends GetxController {
     }
 
     // Show notification for new message
-    NotificationService.showNotification(title: title, body: message);
+    if (isChatOpen) {
+      if (chatId != currentChatId) {
+        NotificationService.showNotification(
+          title: title,
+          body: message,
+          payload: chatId.toString(),
+        );
+      }
+    } else {
+      NotificationService.showNotification(
+        title: title,
+        body: message,
+        payload: chatId.toString(),
+      );
+    }
   }
 
   void navigateToChat(ChatParticipant chat) {
-    Get.toNamed(AppRoutes.chat, arguments: chat);
+    isChatOpen = true;
+    currentChatId = chat.chatId;
+    Get.toNamed(AppRoutes.chat, arguments: chat)?.then((_) {
+      // This runs when user comes back from Chat screen
+      isChatOpen = false;
+      currentChatId = 0;
+    });
   }
 
   @override

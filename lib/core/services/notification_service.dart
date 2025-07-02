@@ -8,7 +8,7 @@ class NotificationService {
       FlutterLocalNotificationsPlugin();
 
   /// Call this in `main()` before `runApp()`
-  static Future<void> initialize() async {
+  static Future<void> initialize(Function(String payload) onTap) async {
     // Timezone setup (required for scheduled notifications)
     tz.initializeTimeZones();
 
@@ -25,7 +25,15 @@ class NotificationService {
       iOS: iosSettings,
     );
 
-    await _notificationsPlugin.initialize(initSettings);
+    await _notificationsPlugin.initialize(
+      initSettings,
+      onDidReceiveNotificationResponse: (NotificationResponse response) async {
+        final payload = response.payload;
+        if (payload != null) {
+          onTap(payload);
+        }
+      },
+    );
 
     await _notificationsPlugin
         .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
@@ -41,6 +49,7 @@ class NotificationService {
   static Future<void> showNotification({
     required String title,
     required String body,
+    String? payload,
   }) async {
     const androidDetails = AndroidNotificationDetails(
       'basic_channel_id',
@@ -64,6 +73,7 @@ class NotificationService {
       title,
       body,
       notificationDetails,
+      payload: payload,
     );
   }
 }

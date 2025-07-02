@@ -28,6 +28,7 @@ class ChatRepository {
     required String chatId,
     required String receiverId,
     required String senderId,
+    required String senderName,
     required void Function(bool status, dynamic result, String? error) callback,
   }) async {
     await ApiClient.postRequest(
@@ -37,6 +38,7 @@ class ChatRepository {
         "receiver_id": receiverId,
         "sender_id": senderId,
         "content": message,
+        "sender_name": senderName,
         "created_at": DateTime.now().toString(),
       },
       (status, result, error) {

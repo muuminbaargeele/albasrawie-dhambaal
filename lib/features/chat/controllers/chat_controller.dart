@@ -131,6 +131,7 @@ class ChatController extends GetxController {
       chatId: chatMessage.value!.chatId.toString(),
       receiverId: chatMessage.value!.receiver.traineeId.toString(),
       senderId: chatMessage.value!.sender.traineeId.toString(),
+      senderName: chatMessage.value!.sender.fullName,
       callback: (status, result, error) {
         if (status) {
           chatMessage.refresh();
