@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:albasrawie_dhambaal/data/models/chat/chat_participant_model.dart';
 import 'package:albasrawie_dhambaal/data/repositories/chat_repository.dart';
 import 'package:flutter/foundation.dart';
@@ -20,6 +22,8 @@ class ChatController extends GetxController {
   final messageController = TextEditingController();
   final isSending = false.obs;
   var messageQuery = ''.obs;
+  late final RxBool isTyping;
+  Timer? typingTimer;
 
   final ScrollController scrollController = ScrollController();
   final RxBool showScrollButton = false.obs;
@@ -28,7 +32,9 @@ class ChatController extends GetxController {
 
   List<ChatMessage> get currentMessages {
     final chats = Get.find<ChatsController>();
-    final chat = chats.allChats.firstWhereOrNull((c) => c.chatId == chatMessage.value?.chatId);
+    final chat = chats.allChats.firstWhereOrNull(
+      (c) => c.chatId == chatMessage.value?.chatId,
+    );
     return chat?.chat ?? [];
   }
 
@@ -36,13 +42,15 @@ class ChatController extends GetxController {
   void onInit() {
     super.onInit();
     final chatsController = Get.find<ChatsController>();
-    final passedChat = Get.arguments as ChatParticipant;
+    final passedChat = Get.arguments["chat"] as ChatParticipant;
+    isTyping = Get.arguments["isTyping"] as RxBool;
     chatMessage.value = passedChat;
     user = _storageService.getUser();
 
     ever(chatsController.allChats, (_) {
-      final updated = chatsController.allChats
-          .firstWhereOrNull((c) => c.chatId == passedChat.chatId);
+      final updated = chatsController.allChats.firstWhereOrNull(
+        (c) => c.chatId == passedChat.chatId,
+      );
       if (updated != null) {
         chatMessage.value = updated;
       }
@@ -50,6 +58,14 @@ class ChatController extends GetxController {
 
     messageController.addListener(() {
       messageQuery.value = messageController.text;
+
+      emitTypingIndicator(chatMessage.value!.chatId, true);
+
+      typingTimer?.cancel();
+
+      typingTimer = Timer(Duration(seconds: 2), () {
+        emitTypingIndicator(chatMessage.value!.chatId, false);
+      });
     });
 
     ever(messageQuery, (_) => checkIsSending());
@@ -69,7 +85,8 @@ class ChatController extends GetxController {
 
   void setupScrollListener() {
     scrollController.addListener(() {
-      final atBottom = scrollController.hasClients && scrollController.offset <= 50;
+      final atBottom =
+          scrollController.hasClients && scrollController.offset <= 50;
       showScrollButton.value = !atBottom;
       if (atBottom) newMessagesCount.value = 0;
     });
@@ -86,7 +103,8 @@ class ChatController extends GetxController {
 
   void trackNewMessages(List<ChatMessage> chats) {
     if (chats.length > oldChatsLength) {
-      final atBottom = scrollController.hasClients && scrollController.offset <= 50;
+      final atBottom =
+          scrollController.hasClients && scrollController.offset <= 50;
       if (!atBottom) {
         newMessagesCount.value += chats.length - oldChatsLength;
       }
@@ -142,5 +160,13 @@ class ChatController extends GetxController {
         }
       },
     );
+  }
+
+  void emitTypingIndicator(int chatId, bool typing) {
+    _socketService.emit('check-indicator', {
+      'chat_id': chatId,
+      'is_typing': typing,
+      'sender_id': user!.traineeId,
+    });
   }
 }

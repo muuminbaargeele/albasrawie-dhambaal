@@ -29,6 +29,8 @@ class ChatsController extends GetxController {
   final RxList<ChatParticipant> allChats = <ChatParticipant>[].obs;
   final RxList<ActiveParticipant> activeParticipants =
       <ActiveParticipant>[].obs;
+  final isTyping = false.obs;
+  final Rx<int?> typingChatId = Rx<int?>(null);
 
   @override
   void onInit() {
@@ -121,6 +123,31 @@ class ChatsController extends GetxController {
         }
       }
     });
+
+    _socketService.on('show-indicator', (data) {
+      try {
+        final typingChatId = int.tryParse(data['chat_id'].toString());
+        final isTypingValue = data['is_typing'] == true;
+        final typingSenderId = int.tryParse(data['sender_id'].toString());
+
+        final isNotMyselfTyping = typingSenderId != user!.traineeId;
+
+        if (typingChatId != null && isTypingValue && isNotMyselfTyping) {
+          isTyping.value = true;
+          this.typingChatId.value = typingChatId; // 👈 NEW
+          print("3 ${isTyping.value}");
+           allChats.refresh();
+        } else {
+          isTyping.value = false;
+          this.typingChatId.value = null; // 👈 NEW
+           allChats.refresh();
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          print('❌ Error handling typing indicator: $e');
+        }
+      }
+    });
   }
 
   void updateChatFromSocket(Map<String, dynamic> result) {
@@ -181,18 +208,13 @@ class ChatsController extends GetxController {
   void navigateToChat(ChatParticipant chat) {
     isChatOpen = true;
     currentChatId = chat.chatId;
-    Get.toNamed(AppRoutes.chat, arguments: chat)?.then((_) {
+    Get.toNamed(
+      AppRoutes.chat,
+      arguments: {"chat": chat, "isTyping": isTyping},
+    )?.then((_) {
       // This runs when user comes back from Chat screen
       isChatOpen = false;
       currentChatId = 0;
     });
-  }
-
-  @override
-  void onClose() {
-    // _socketService.off('show_chat_tap_on_top');
-    // _socketService.disconnect();
-    searchController.dispose();
-    super.onClose();
   }
 }

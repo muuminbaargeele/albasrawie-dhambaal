@@ -50,6 +50,8 @@ class ChatsContainer extends StatelessWidget {
                     return TabSelector();
                   }
                   final chat = chats[index - 2];
+                  final bool isTyping =
+                      controller.typingChatId.value == chat.chatId;
                   final displayName = chat.receiver.fullName.isNotEmpty
                       ? chat.receiver.fullName
                       : chat.sender.fullName;
@@ -60,7 +62,8 @@ class ChatsContainer extends StatelessWidget {
                   final statusIcon =
                       chat.chat.isNotEmpty &&
                           chat.chat[0].status != null &&
-                          chat.chat[0].senderId == controller.user!.traineeId
+                          chat.chat[0].senderId == controller.user!.traineeId &&
+                          !isTyping
                       ? switch (chat.chat[0].status) {
                           'sent' => LucideIcons.check,
                           'delivered' || 'seen' => LucideIcons.checkCheck,
@@ -152,7 +155,8 @@ class ChatsContainer extends StatelessWidget {
                                               CrossAxisAlignment.center,
                                           children: [
                                             Row(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
                                                 if (statusIcon != null)
                                                   Icon(
@@ -165,11 +169,14 @@ class ChatsContainer extends StatelessWidget {
                                                 SizedBox(
                                                   width: 240.w,
                                                   child: Text(
-                                                    messagePreview?.replaceAll(
-                                                          '\n',
-                                                          ' ',
-                                                        ) ??
-                                                        "",
+                                                    isTyping
+                                                        ? "Typing..."
+                                                        : messagePreview
+                                                                  ?.replaceAll(
+                                                                    '\n',
+                                                                    ' ',
+                                                                  ) ??
+                                                              "",
                                                     style: Theme.of(
                                                       context,
                                                     ).textTheme.bodySmall,

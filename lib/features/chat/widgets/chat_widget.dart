@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../core/utils/time_utils.dart';
 import '../controllers/chat_controller.dart';
@@ -28,21 +29,58 @@ class ChatWidget extends StatelessWidget {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               controller.trackNewMessages(chats);
             });
+            final bool isTyping = controller.isTyping.value;
+            final extraTyping = isTyping
+                ? [
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxWidth: MediaQuery.of(context).size.width * 3 / 4,
+                        ),
+                        child: ChatBubble(
+                          clipper: ChatBubbleClipper3(
+                            type: BubbleType.receiverBubble,
+                          ),
+                          alignment: Alignment.topLeft,
+                          backGroundColor: adjusted,
+                          elevation: 0,
+                          margin: EdgeInsets.fromLTRB(4.h, 0, 4.h, 8.h),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8),
+                            child: LoadingAnimationWidget.waveDots(
+                              size: 20,
+                              color: Theme.of(context).hintColor,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ]
+                : [];
             return ListView.builder(
               controller: controller.scrollController,
               reverse: true,
               padding: EdgeInsets.all(0),
-              itemCount: chats.length,
+              itemCount: chats.length + extraTyping.length,
               itemBuilder: (context, index) {
-                final chat = chats[index];
-                final bool isSender = chat.senderId == controller.user!.traineeId;
+                if (index < extraTyping.length) {
+                  return extraTyping[index];
+                }
+                final chat = chats[index - extraTyping.length];
+                final bool isSender =
+                    chat.senderId == controller.user!.traineeId;
 
                 // New logic for grouping bubbles
-                final bool isFirst = index == 0;
+                final bool isFirst = index - extraTyping.length == 0;
                 final bool isPrevSameSender =
-                    !isFirst && chats[index - 1].senderId == chat.senderId;
+                    !isFirst &&
+                    chats[index - extraTyping.length - 1].senderId ==
+                        chat.senderId;
                 final bool showBubble = isFirst || !isPrevSameSender;
-                final double sideMargin = isFirst ? 4.h : (showBubble ? 4.h : 12.h);
+                final double sideMargin = isFirst
+                    ? 4.h
+                    : (showBubble ? 4.h : 12.h);
 
                 final statusIcon = chat.status != null && isSender
                     ? switch (chat.status) {
@@ -94,7 +132,9 @@ class ChatWidget extends StatelessWidget {
                                   child: Text(
                                     chat.content ?? "",
                                     maxLines: null,
-                                    style: Theme.of(context).textTheme.bodyLarge,
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.bodyLarge,
                                   ),
                                 ),
                                 SizedBox(width: 8.w),
@@ -132,8 +172,12 @@ class ChatWidget extends StatelessWidget {
                               borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(16.r),
                                 topRight: Radius.circular(16.r),
-                                bottomLeft: Radius.circular(isSender ? 16.r : 4.r),
-                                bottomRight: Radius.circular(isSender ? 4.r : 16.r),
+                                bottomLeft: Radius.circular(
+                                  isSender ? 16.r : 4.r,
+                                ),
+                                bottomRight: Radius.circular(
+                                  isSender ? 4.r : 16.r,
+                                ),
                               ),
                             ),
                             child: Row(
@@ -144,7 +188,9 @@ class ChatWidget extends StatelessWidget {
                                   child: Text(
                                     chat.content ?? "",
                                     maxLines: null,
-                                    style: Theme.of(context).textTheme.bodyLarge,
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.bodyLarge,
                                   ),
                                 ),
                                 SizedBox(width: 8.w),
@@ -171,49 +217,53 @@ class ChatWidget extends StatelessWidget {
               },
             );
           }),
-          Obx(() => controller.showScrollButton.value
-              ? Positioned(
-                  bottom: 16.h,
-                  right: 12.w,
-                  child: GestureDetector(
-                    onTap: controller.scrollToBottom,
-                    child: Stack(
-                      clipBehavior: Clip.none,
-                      alignment: Alignment.center,
-                      children: [
-                        Container(
-                          width: 42.w,
-                          height: 42.w,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: adjusted,
-                            boxShadow: [
-                              BoxShadow(
-                                color: adjusted.withOpacity(0.1),
-                                blurRadius: 4,
-                              ),
-                            ],
+          Obx(
+            () => controller.showScrollButton.value
+                ? Positioned(
+                    bottom: 16.h,
+                    right: 12.w,
+                    child: GestureDetector(
+                      onTap: controller.scrollToBottom,
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        alignment: Alignment.center,
+                        children: [
+                          Container(
+                            width: 42.w,
+                            height: 42.w,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: adjusted,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: adjusted.withOpacity(0.1),
+                                  blurRadius: 4,
+                                ),
+                              ],
+                            ),
+                            child: Icon(Icons.keyboard_arrow_down),
                           ),
-                          child: Icon(Icons.keyboard_arrow_down,),
-                        ),
-                        if (controller.newMessagesCount.value > 0)
-                          Positioned(
-                            top: -4,
-                            right: -4,
-                            child: CircleAvatar(
-                              radius: 10,
-                              backgroundColor: Theme.of(context).colorScheme.secondary,
-                              child: Text(
-                                '${controller.newMessagesCount.value}',
-                                style: TextStyle(fontSize: 12.sp,),
+                          if (controller.newMessagesCount.value > 0)
+                            Positioned(
+                              top: -4,
+                              right: -4,
+                              child: CircleAvatar(
+                                radius: 10,
+                                backgroundColor: Theme.of(
+                                  context,
+                                ).colorScheme.secondary,
+                                child: Text(
+                                  '${controller.newMessagesCount.value}',
+                                  style: TextStyle(fontSize: 12.sp),
+                                ),
                               ),
                             ),
-                          ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                )
-              : SizedBox.shrink()),
+                  )
+                : SizedBox.shrink(),
+          ),
         ],
       ),
     );
