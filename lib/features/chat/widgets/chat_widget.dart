@@ -29,7 +29,9 @@ class ChatWidget extends StatelessWidget {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               controller.trackNewMessages(chats);
             });
-            final bool isTyping = controller.isTyping.value;
+            final bool isTyping =
+                controller.typingChatId.value ==
+                controller.chatMessage.value?.chatId;
             final extraTyping = isTyping
                 ? [
                     Align(

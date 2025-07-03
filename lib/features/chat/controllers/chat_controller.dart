@@ -23,6 +23,7 @@ class ChatController extends GetxController {
   final isSending = false.obs;
   var messageQuery = ''.obs;
   late final RxBool isTyping;
+  late final Rx<int?> typingChatId;
   Timer? typingTimer;
 
   final ScrollController scrollController = ScrollController();
@@ -44,6 +45,7 @@ class ChatController extends GetxController {
     final chatsController = Get.find<ChatsController>();
     final passedChat = Get.arguments["chat"] as ChatParticipant;
     isTyping = Get.arguments["isTyping"] as RxBool;
+    typingChatId = Get.arguments["typingChatId"] as Rx<int?>;
     chatMessage.value = passedChat;
     user = _storageService.getUser();
 

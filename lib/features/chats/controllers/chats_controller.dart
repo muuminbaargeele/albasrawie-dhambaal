@@ -210,7 +210,7 @@ class ChatsController extends GetxController {
     currentChatId = chat.chatId;
     Get.toNamed(
       AppRoutes.chat,
-      arguments: {"chat": chat, "isTyping": isTyping},
+      arguments: {"chat": chat, "isTyping": isTyping, "typingChatId": typingChatId},
     )?.then((_) {
       // This runs when user comes back from Chat screen
       isChatOpen = false;
