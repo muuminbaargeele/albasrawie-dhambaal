@@ -1,7 +1,7 @@
 name: albasrawie_dhambaal
 description: "Albasrawie Dhambaal messaging app."
 publish_to: "none"
-version: 0.1.0
+version: 0.1.6+7
 
 environment:
   sdk: ^3.8.1
