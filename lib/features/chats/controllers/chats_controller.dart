@@ -112,6 +112,23 @@ class ChatsController extends GetxController {
     }).toList();
   }
 
+  List<ActiveParticipant> get filteredActiveParticipants {
+    List<ActiveParticipant> baseList = activeParticipants;
+
+    if (searchQuery.value.isEmpty) return baseList;
+
+    return baseList.where((participant) {
+      final name = participant.traineeFullName.toLowerCase();
+      final email = participant.traineeEmail.toLowerCase();
+      final phone = participant.traineePhoneNumber.toLowerCase();
+      final query = searchQuery.value.toLowerCase();
+
+      return name.contains(query) ||
+          email.contains(query) ||
+          phone.contains(query);
+    }).toList();
+  }
+
   void _listenToSocket() {
     _socketService.on('show_chat_tap_on_top', (data) {
       try {
@@ -136,11 +153,11 @@ class ChatsController extends GetxController {
           isTyping.value = true;
           this.typingChatId.value = typingChatId; // 👈 NEW
           print("3 ${isTyping.value}");
-           allChats.refresh();
+          allChats.refresh();
         } else {
           isTyping.value = false;
           this.typingChatId.value = null; // 👈 NEW
-           allChats.refresh();
+          allChats.refresh();
         }
       } catch (e) {
         if (kDebugMode) {
@@ -210,7 +227,11 @@ class ChatsController extends GetxController {
     currentChatId = chat.chatId;
     Get.toNamed(
       AppRoutes.chat,
-      arguments: {"chat": chat, "isTyping": isTyping, "typingChatId": typingChatId},
+      arguments: {
+        "chat": chat,
+        "isTyping": isTyping,
+        "typingChatId": typingChatId,
+      },
     )?.then((_) {
       // This runs when user comes back from Chat screen
       isChatOpen = false;

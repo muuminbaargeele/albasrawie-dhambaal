@@ -19,6 +19,7 @@ class ChatsContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Obx(() {
+        final isLoading = controller.isLoading.value;
         final chats = controller.filteredChats.toList()
           ..sort((a, b) {
             final aDate = a.chat.isNotEmpty && a.chat[0].sentAt != null
@@ -29,9 +30,17 @@ class ChatsContainer extends StatelessWidget {
                 : DateTime.parse(b.createdAt);
             return bDate.compareTo(aDate);
           });
-        return controller.allChats.isEmpty
+        return controller.allChats.isEmpty && isLoading
             ? Center(
                 child: SizedBox(child: CircularProgressIndicator.adaptive()),
+              )
+            : controller.allChats.isEmpty
+            ? Center(
+                child: SizedBox(
+                  child: Text(
+                    "Ku Dhufo Summada Si + aad Dhambaal Cusub u Dirtid",
+                  ),
+                ),
               )
             : ListView.builder(
                 itemCount: chats.length + 2,
@@ -197,7 +206,7 @@ class ChatsContainer extends StatelessWidget {
                               ),
                             ),
                           ),
-                          Padding(
+                          if (chats.length > 1) Padding(
                             padding: EdgeInsets.fromLTRB(76.w, 0, 16.w, 0),
                             child: Container(
                               height: 0.2,

@@ -33,7 +33,7 @@ class SearchTextField extends StatelessWidget {
 
     return Obx(
       () => Padding(
-        padding: const EdgeInsets.only(left: 16, right: 16, top: 4),
+        padding: EdgeInsets.only(left: 16.w, right: 16.w, top: 4.h),
         child: TextField(
           controller: controller,
           obscureText: isObscure.value,
