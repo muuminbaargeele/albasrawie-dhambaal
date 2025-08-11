@@ -35,7 +35,7 @@ class SelectUserScreen extends GetView<GetxController> {
                 ),
                 SizedBox(height: 8.h),
                 SearchTextField(
-                  hintText: "Search Name or email or number",
+                  hintText: "Ku raadi magac, lambar ama iimayl...",
                   icon: LucideIcons.search,
                   controller: controller.searchController,
                   onChanged: (value) {

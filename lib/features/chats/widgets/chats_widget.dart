@@ -47,7 +47,7 @@ class ChatsContainer extends StatelessWidget {
                 itemBuilder: (context, index) {
                   if (index == 0) {
                     return SearchTextField(
-                      hintText: "Search",
+                      hintText: "Raadi Dhambaal...",
                       icon: LucideIcons.search,
                       controller: controller.searchController,
                       onChanged: (value) {

@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
@@ -21,25 +22,46 @@ class CustomNavBar extends StatelessWidget {
     final adjusted = adjustColorBrightness(
       Theme.of(context).scaffoldBackgroundColor,
     );
-    return ClipRRect(
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
-        child: Container(
-          height: 70 + 14,
-          padding: EdgeInsets.only(bottom: 14),
-          decoration: BoxDecoration(
-            color: adjusted.withOpacity(0.5), // Figma color
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildNavItem(LucideIcons.phone, "Calls", 0, context),
-              _buildNavItem(LucideIcons.messageCircle, "Chats", 1, context),
-              _buildNavItem(LucideIcons.cog, "Settings", 2, context),
-            ],
-          ),
-        ),
-      ),
+    print(bottomInset);
+    return SafeArea(
+      top: false,
+      bottom: bottomInset > 30 ? true : false,
+      child: Platform.isIOS
+          ? ClipRRect(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
+                child: Container(
+                  height: 70 + 14,
+                  padding: EdgeInsets.only(bottom: 14),
+                  decoration: BoxDecoration(
+                    color: adjusted.withOpacity(0.5), // Figma color
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      _buildNavItem(LucideIcons.phone, "Wicitaano", 0, context),
+                      _buildNavItem(LucideIcons.messageCircle, "Dhambaalo", 1, context),
+                      _buildNavItem(LucideIcons.cog, "Bayqaamin", 2, context),
+                    ],
+                  ),
+                ),
+              ),
+            )
+          : Container(
+              height: 70 + 14,
+              padding: EdgeInsets.only(bottom: 14),
+              decoration: BoxDecoration(
+                color: adjusted, // Figma color
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildNavItem(LucideIcons.phone, "Wicitaano", 0, context),
+                  _buildNavItem(LucideIcons.messageCircle, "Dhambaalo", 1, context),
+                  _buildNavItem(LucideIcons.cog, "Bayqaamin", 2, context),
+                ],
+              ),
+            ),
     );
   }
 

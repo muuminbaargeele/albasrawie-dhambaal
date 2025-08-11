@@ -7,7 +7,7 @@ import '../controllers/chats_controller.dart';
 class TabSelector extends StatelessWidget {
   TabSelector({super.key});
 
-  final List<String> tabs = ['All', 'Unread', 'favourites', 'Groups'];
+  final List<String> tabs = ['Giddi', 'Dhimman', 'Mudnaan', 'Koox'];
   final ChatsController controller = Get.find();
 
   @override

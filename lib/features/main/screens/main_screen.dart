@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../../../shared/widgets/custom_nav_bar.dart';
 import '../../calls/screens/calls_screen.dart';
@@ -14,6 +15,14 @@ class MainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<MainController>();
     final bottomInset = MediaQuery.of(context).padding.bottom;
+    if (bottomInset > 30) {
+      // 3-button mode
+      SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(
+          systemNavigationBarColor: Theme.of(context).colorScheme.secondary,
+        ),
+      );
+    }
 
     return Scaffold(
       body: Obx(() {
