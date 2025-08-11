@@ -2,7 +2,7 @@ import 'package:intl/intl.dart';
 
 String formatChatTimestamp(String timestamp) {
   final now = DateTime.now();
-  final messageTime = DateTime.parse(timestamp).toLocal();
+  final messageTime = DateTime.parse(timestamp).toLocal(); // UTC → Local
 
   final today = DateTime(now.year, now.month, now.day);
   final messageDay = DateTime(
@@ -28,7 +28,7 @@ String formatChatTime(String? isoString, {bool is24h = false}) {
   if (isoString == null || isoString.isEmpty) return '';
 
   try {
-    final dateTime = DateTime.parse(isoString);
+    final dateTime = DateTime.parse(isoString).toLocal();
     final format = is24h ? DateFormat.Hm() : DateFormat.jm(); // HH:mm or h:mm a
     return format.format(dateTime);
   } catch (e) {

@@ -100,7 +100,7 @@ class ChatWidget extends StatelessWidget {
                       }
                     : null;
 
-                final time = formatChatTime(chat.sentAt, is24h: true);
+                final time = formatChatTime(chat.sentAt, is24h: false);
 
                 return Align(
                   alignment: isSender ? Alignment.topRight : Alignment.topLeft,

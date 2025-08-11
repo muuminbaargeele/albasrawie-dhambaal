@@ -1,3 +1,4 @@
+import 'package:albasrawie_dhambaal/data/models/chat/receiver_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -40,6 +41,18 @@ class SelectUserContainer extends StatelessWidget {
                         : "";
                     final displayImage = chat.imagePath;
                     final email = chat.traineeEmail;
+                    final fullName = chat.traineeFullName;
+                    final image = chat.imagePath;
+                    final phone = chat.traineePhoneNumber;
+                    final traineeId = chat.traineeId;
+
+                    final receiver = Receiver(
+                      email: email,
+                      fullName: fullName,
+                      image: image,
+                      phone: phone,
+                      traineeId: traineeId,
+                    );
 
                     return Builder(
                       builder: (context) {
@@ -47,7 +60,7 @@ class SelectUserContainer extends StatelessWidget {
                           children: [
                             InkWell(
                               onTap: () {
-                                // controller.navigateToChat(chat);
+                                controller.createNewChat(receiver);
                               },
                               child: Padding(
                                 padding: EdgeInsets.fromLTRB(

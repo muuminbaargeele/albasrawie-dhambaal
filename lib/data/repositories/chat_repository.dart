@@ -15,7 +15,7 @@ class ChatRepository {
         "receiver_id": receiverId,
         "sender_id": senderId,
         "content": message,
-        "created_at": DateTime.now().toString(),
+        "created_at": DateTime.now().toUtc().toIso8601String(),
       },
       (status, result, error) {
         callback(status, result, error);
@@ -39,7 +39,7 @@ class ChatRepository {
         "sender_id": senderId,
         "content": message,
         "sender_name": senderName,
-        "created_at": DateTime.now().toString(),
+        "created_at": DateTime.now().toUtc().toIso8601String(),
       },
       (status, result, error) {
         callback(status, result, error);

@@ -2,6 +2,8 @@ import 'package:albasrawie_dhambaal/features/chat/controllers/chat_controller.da
 import 'package:albasrawie_dhambaal/features/chat/screens/chat_screen.dart';
 import 'package:albasrawie_dhambaal/features/main/controllers/main_controller.dart';
 import 'package:albasrawie_dhambaal/features/main/screens/main_screen.dart';
+import 'package:albasrawie_dhambaal/features/settings/controllers/settings_controller.dart';
+import 'package:albasrawie_dhambaal/features/settings/screens/settings_screen.dart';
 import 'package:get/get.dart';
 import '../features/auth/screens/login_screen.dart';
 import '../features/chats/screens/chats_screen.dart';
@@ -37,6 +39,13 @@ class AppPages {
       page: () => const ChatScreen(),
       binding: BindingsBuilder(() {
         Get.lazyPut(() => ChatController());
+      }),
+    ),
+    GetPage(
+      name: AppRoutes.settings,
+      page: () => const SettingsScreen(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut(() => SettingsController());
       }),
     ),
   ];

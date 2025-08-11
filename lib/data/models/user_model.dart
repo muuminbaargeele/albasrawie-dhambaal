@@ -4,7 +4,7 @@ class UserModel {
   final int traineeId;
   final String phoneNumber;
   final String status;
-  final String imagePath;
+  final String? imagePath;
   final String instructorEmail;
   final String instructorFullName;
   final String myDate;
@@ -16,7 +16,7 @@ class UserModel {
     required this.traineeId,
     required this.phoneNumber,
     required this.status,
-    required this.imagePath,
+    this.imagePath,
     required this.instructorEmail,
     required this.instructorFullName,
     required this.myDate,

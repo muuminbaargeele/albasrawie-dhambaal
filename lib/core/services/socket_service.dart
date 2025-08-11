@@ -11,14 +11,31 @@ class SocketService {
   late io.Socket _socket;
 
   void connect() {
-    _socket = io.io(Constants.devBaseUrl, <String, dynamic>{
-      'transports': ['websocket'],
-      'autoConnect': true,
-    });
+    // Normalize base URL (remove any trailing slash) to avoid building something like https://host:0/
+    final base = Constants.devBaseUrl.replaceFirst(RegExp(r"/*$"), "");
+
+    // Build Socket.IO options explicitly to avoid the :0 port issue and ensure correct path
+    final options = io.OptionBuilder()
+        .setTransports(['websocket']) // force WS
+        .setPath('/socket.io')        // default path, set explicitly
+        .enableForceNew()             // create a fresh manager
+        .enableReconnection()         // auto-reconnect
+        .setReconnectionAttempts(5)
+        .setReconnectionDelay(1000)
+        .setTimeout(10000)
+        // Optional: some proxies care about Origin; set it to your host if you use HTTPS domain
+        .setExtraHeaders({'Origin': base})
+        .build();
+
+    if (kDebugMode) {
+      print('🔗 Attempting Socket.IO connect to: $base (path=/socket.io)');
+    }
+
+    _socket = io.io(base, options);
 
     _socket.onConnect((_) {
       if (kDebugMode) {
-        print('✅ Socket.IO connected to ${Constants.devBaseUrl}');
+        print('✅ Socket.IO connected to $base');
       }
     });
 
@@ -28,9 +45,28 @@ class SocketService {
       }
     });
 
+    // Add richer diagnostics
     _socket.onError((error) {
       if (kDebugMode) {
         print('❌ Socket.IO error: $error');
+      }
+    });
+
+    _socket.on('connect_error', (data) {
+      if (kDebugMode) {
+        print('❌ connect_error: $data');
+      }
+    });
+
+    _socket.on('reconnect_attempt', (_) {
+      if (kDebugMode) {
+        print('↻ Reconnect attempt...');
+      }
+    });
+
+    _socket.on('reconnect_failed', (_) {
+      if (kDebugMode) {
+        print('❌ Reconnect failed');
       }
     });
   }

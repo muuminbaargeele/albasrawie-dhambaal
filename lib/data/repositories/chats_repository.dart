@@ -13,4 +13,22 @@ class ChatsRepository {
       },
     );
   }
+
+    Future<void> getNewChatId({
+    required String userId,
+    required String traineeId,
+    required void Function(bool status, dynamic result, String? error) callback,
+  }) async {
+    await ApiClient.postRequest(
+      'end_point/create_new_chat',
+      {
+        "user_id": userId,
+        "trainee_id": traineeId,
+        "created_at": DateTime.now().toUtc().toIso8601String(),
+      },
+      (status, result, error) {
+        callback(status, result, error);
+      },
+    );
+  }
 }

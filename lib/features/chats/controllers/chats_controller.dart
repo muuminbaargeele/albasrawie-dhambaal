@@ -1,3 +1,5 @@
+import 'package:albasrawie_dhambaal/data/models/chat/receiver_model.dart';
+import 'package:albasrawie_dhambaal/data/models/chat/sender_model.dart';
 import 'package:albasrawie_dhambaal/routes/app_routes.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +15,7 @@ import '../../../data/models/chat/chat_message_model.dart';
 import '../../../data/models/chat/chat_participant_model.dart';
 import '../../../data/models/user_model.dart';
 import '../../../data/repositories/chats_repository.dart';
+import '../../../core/constants/constants.dart';
 
 class ChatsController extends GetxController {
   final ChatsRepository _chatsRepository = ChatsRepository();
@@ -89,6 +92,40 @@ class ChatsController extends GetxController {
             'active_participants',
             activeParticipants.map((e) => e.toJson()).toList(),
           );
+        } else {
+          CustomSnackbar.showError(
+            title: "Cilad farsamo ayaa dhacay",
+            error ?? "Cilad farsamo ayaa dhacay",
+          );
+        }
+      },
+    );
+  }
+
+  Future<void> createNewChat(Receiver receiver) async {
+    isLoading.value = true;
+
+    await _chatsRepository.getNewChatId(
+      userId: user!.traineeId.toString(),
+      traineeId: receiver.traineeId.toString(),
+      callback: (status, result, error) {
+        isLoading.value = false;
+        if (status) {
+          var chatId = result["chat_id"];
+          final chat = ChatParticipant(
+            chat: [],
+            chatId: chatId,
+            createBy: user!.traineeId,
+            createdAt: DateTime.now().toUtc().toIso8601String(),
+            receiver: receiver,
+            sender: Sender(
+              fullName: user!.fullName,
+              image: user!.imagePath ?? Constants.noImagePath,
+              phone: user!.phoneNumber,
+              traineeId: user!.traineeId,
+            ),
+          );
+          navigateToChat(chat);
         } else {
           CustomSnackbar.showError(
             title: "Cilad farsamo ayaa dhacay",
